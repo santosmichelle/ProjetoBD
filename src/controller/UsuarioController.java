@@ -5,8 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import conexao.ConexaoBD;
 import model.Usuario;
@@ -24,13 +22,14 @@ public class UsuarioController {
 
 	public Usuario login(String nome, String senha){
 
-		//ConexaoBD bd = new ConexaoBD();
+		
 		Connection con = bd.conexao();
 
 		
 		try {
-			PreparedStatement sql = con.prepareStatement("select * from usuario");
-
+			PreparedStatement sql = con.prepareStatement("select * from usuario where nome = ? and senha = ?");
+			sql.setString(1, nome);
+			sql.setString(2, senha);
 
 			rs = sql.executeQuery();
 
@@ -56,7 +55,7 @@ public class UsuarioController {
 			while(rs.next()){
 				System.out.println("Oiii user");
 				u = new Usuario(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));   
-				rs.close();
+				//rs.close();
 				//				us = new ArrayList<>();
 				//				us.add(u);
 			}
