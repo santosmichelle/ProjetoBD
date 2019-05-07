@@ -15,6 +15,8 @@ public class Main {
 		PostagemController pc = new PostagemController(bd);
 		 
 		Postagem post = new Postagem();  
+	}
+}
 				
 //				try {
 //					user_logado = uc.login(JOptionPane.showInputDialog("Digite o login"), 
@@ -63,25 +65,23 @@ public class Main {
 //		// TODO: handle exception
 //	}
 //		
-		
-		
-		try {
-			
-			post = new Postagem(JOptionPane.showInputDialog("Digite o texto"), 
-					user_logado.getIdUsuario(), JOptionPane.showInputDialog("Digite a foto"));	
-			
-		pc.criarPost(post);
-			
-	
-		} catch (Exception e) {
-			e.printStackTrace();
-			bd.fechar();
-			System.out.println("main fechar!");
-			// TODO: handle exception
-		}
-	
-
-	}
-
-	
-}
+//		
+//		
+//		try {
+//			
+//			post = new Postagem(JOptionPane.showInputDialog("Digite o texto"), 
+//					user_logado.getIdUsuario(), JOptionPane.showInputDialog("Digite a foto"));	
+//			
+//		pc.criarPost(post);
+//			
+//	
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			bd.fechar();
+//			System.out.println("main fechar!");
+//			// TODO: handle exception
+//		}
+//	
+//
+//	}
+//}

@@ -5,8 +5,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import conexao.ConexaoBD;
+import model.Seguidores;
+import model.Seguindo;
 import model.Usuario;
 
 public class UsuarioController {
@@ -47,7 +50,80 @@ public class UsuarioController {
 		return u;
 	}
 
+	public void UserBloqueado(Usuario u, String idBloqueio){
 
+		Connection con = bd.conexao();
+		
+		try {
+
+		} catch (Exception e) { 
+			System.out.println("Erro - "+e);
+		}finally {
+			try {
+				//con.close();
+			} catch (Exception e2) {
+
+			}
+		}
+	}
+
+
+	public List<Seguidores> ListarSeguidores(Usuario u){
+		List<Seguidores> s = null;
+		Connection con = bd.conexao();
+		
+		try {
+
+		} catch (Exception e) { 
+			System.out.println("Erro - "+e);
+		}finally {
+			try {
+				//con.close();
+			} catch (Exception e2) {
+
+			}
+		}
+		
+		return s;
+	}
+
+	
+	public List<Seguindo> ListarSeguindo(Usuario u){
+		List<Seguindo> s = null;
+		Connection con = bd.conexao();
+		
+		try {
+
+		} catch (Exception e) { 
+			System.out.println("Erro - "+e);
+		}finally {
+			try {
+				//con.close();
+			} catch (Exception e2) {
+
+			}
+		}
+		
+		return s;
+	}
+	
+	public void seguirUsuario(Usuario u, String idUsuarioSeguir){
+		Connection con = bd.conexao();
+		
+		try {
+
+		} catch (Exception e) { 
+			System.out.println("Erro - "+e);
+		}finally {
+			try {
+				//con.close();
+			} catch (Exception e2) {
+
+			}
+		}
+		
+	}	
+	
 	public Usuario SetarUser(ResultSet rs){ // um objeto que vai receber linhas do bd
 
 		//		List<Usuario> us;
@@ -111,4 +187,3 @@ public class UsuarioController {
 	}
 
 }
-
