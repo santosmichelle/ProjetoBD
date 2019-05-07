@@ -15,7 +15,7 @@ public class ConexaoBD {
 		
 		try {
 			Class.forName("org.h2.Driver");
-			con = DriverManager.getConnection ("jdbc:h2:~/db_instagram","sa","");
+			con = DriverManager.getConnection ("jdbc:h2:~/db_instagram;TRACE_LEVEL_FILE=2","sa","");
 			System.out.println("Conectado!");
 		} catch (Exception e) {
 			System.out.println("Erro - "+e);

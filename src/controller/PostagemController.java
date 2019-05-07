@@ -155,6 +155,18 @@ public class PostagemController {
 	
 	public void incluirComentario (Comentario c) {
 		
+//		PreparedStatement sql = con.prepareStatement("INSERT INTO POSTAGEM (TEXTO, IDUSUARIO,FOTO,DATA) "
+//				+ "VALUES (?,?,?,to_date(to_char(sysdate,'dd/mm/yyyy hh24:mi:ss'),'dd/mm/yyyy hh24:mi:ss'))");
+//
+//		sql.setString(1, post.getTexto());
+//		sql.setString(2, post.getIdUsuario());
+//		sql.setString(3, post.getFoto());
+
+
+
+		//sql.executeUpdate(); // usado para inserts, update e delete 
+
+		
 		Connection con = bd.conexao();
 
 		try {
