@@ -110,22 +110,26 @@ public class Interface {
 				/*ok*/	+ "6  - Listar notificação \n" //OK, INCLUIR NOTIFICACAO DE MARCACAO OU CONVERSA, listar  por data, incluir opcao de buscar posts e comentarios com @ ou #, alem de pessoas q seguem
 				/*ok*/	+ "7  - Aceitar solicitação \n" //OK
 				/*ok*/	+ "8  - Inserir comentario \n" //OK
-				/*ok*/	+ "9  - Deleltar post/comentario \n" //OK
+				/*ok*/	+ "9  - Deletar post/comentario \n" //OK
 				/*ok*/	+ "10 - Buscar Marcacao \n" 	
-//				/*ok*/	+ "10  - Listar um Post/comentario \n" 						
+				/*ok*/	+ "11 - Ver linha do tempo \n" 						
 						
 						+ "digite 999 p sair"));
 
 
 				switch (opt) {
 				case 1:
-					
+
+					vlrTmp = null;
 					rs = null;
 					
 						try {
 							rs = uc.buscaUsuario(JOptionPane.showInputDialog("Digite o usuario para buscar"));
 							
-							JOptionPane.showMessageDialog(null,rs.getNomeUsuario());
+							vlrTmp = "Nome: "+ rs.getNomeReal() + "\n"+
+									"Biografia: "+ rs.getBiografia() +"\n";
+							
+							JOptionPane.showMessageDialog(null,vlrTmp);
 							
 							
 						} catch (Exception e) {
@@ -186,12 +190,13 @@ public class Interface {
 					break;
 				case 5:
 					opcao = null;
+					vlrTmp = null;
 					
 					try {
 
 					opcao = JOptionPane.showInputDialog("Digite a opção para listar (1- Post,2- Coment)");
 					if (opcao.equals("1")) {
-						vlrTmp = uc.listarPostComentario(userlogado.getIdUsuario(),opcao);
+						vlrTmp = uc.listarPostComentario(JOptionPane.showInputDialog("Digite o id do usuario"),opcao);
 					}else if (opcao.equals("2")){
 						vlrTmp = uc.listarPostComentario(JOptionPane.showInputDialog("Digite o id do post"),opcao);
 					}
@@ -277,22 +282,33 @@ public class Interface {
 					break;					
 				case 10:
 					
-	
+			try {
+						
+						JOptionPane.showMessageDialog(null, uc.obterLinhaDoTempo(userlogado));
+		
+					} catch (Exception e) {
+						e.printStackTrace();
+						bd.fechar();
+						System.out.println("main fechar!");
+						// TODO: handle exception
+					}	
+			
 					
 					break;					
 				case 11:
-
+					try {
+						
+						JOptionPane.showMessageDialog(null, pc.getMarcacao(JOptionPane.showInputDialog("Digite a tag para pesquisar")));
+		
+					} catch (Exception e) {
+						e.printStackTrace();
+						bd.fechar();
+						System.out.println("main fechar!");
+						// TODO: handle exception
+					}		
 
 					
-					break;					
-				case 12:
-
-					
-					break;
-				case 13:
-
-					
-					break;					
+					break;										
 				default:
 					break;
 				}

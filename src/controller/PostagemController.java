@@ -158,7 +158,8 @@ public class PostagemController {
 		
 		
 		Connection con = bd.conexao();
-
+		PreparedStatement sql3 = null;
+		
 		try {
 			PreparedStatement sql = con.prepareStatement("INSERT INTO comentario (conteudo, IDUSUARIO,idpost,DATA) "
 					+ "VALUES (?,?,?,to_date(to_char(sysdate,'dd/mm/yyyy hh24:mi:ss'),'dd/mm/yyyy hh24:mi:ss'))");
@@ -166,6 +167,16 @@ public class PostagemController {
 			sql.setString(1, conteudo);
 			sql.setString(2, u.getIdUsuario());
 			sql.setString(3, idPost);
+			
+			
+			if(conteudo.contains("@")) {
+				sql3 = con.prepareStatement("INSERT INTO notificacao (ID_SEGUIDOR,CONTEUDO)  VALUES (?,?)");
+
+				sql3.setString(1, getIdUsuario(conteudo));
+				sql3.setString(2, "USUARIO: " + u.getNomeUsuario()+" lhe marcou num comentario");
+				
+				sql3.executeUpdate();
+			}
 
 
 
@@ -180,6 +191,46 @@ public class PostagemController {
 
 	}	
 	
+	private String getIdUsuario(String conteudo) {
+
+		Connection con = bd.conexao();
+		
+		String c = null;
+		String nome = null;
+		
+		String g = conteudo.substring(conteudo.indexOf("@"));
+
+		int	t = (g.indexOf(" ")==0)?0:g.indexOf(" ");
+		
+		if (t == -1 ) {
+			
+			nome = g.substring(1);
+		}else {
+			nome = g.substring(1,t);
+			
+		}		
+		
+		try {
+			PreparedStatement sql = con.prepareStatement("select idusuario from usuario where nome= ?");
+
+			sql.setString(1, nome);
+			rs = sql.executeQuery();
+			
+			while(rs.next()){
+				c = rs.getString(1);
+			}
+			
+			}
+		catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+
+		return c;
+		
+	}
+
+
 	public void deleteComentario (String id) {
 		
 		Connection con = bd.conexao();
@@ -224,6 +275,34 @@ public class PostagemController {
 
 			}
 		}
+		
+	}
+
+
+	public String getMarcacao(String tag) {
+
+		Connection con = bd.conexao();
+		
+		String c = null;
+	
+		
+		try {
+			PreparedStatement sql = con.prepareStatement("select conteudo from vw_posts_coments where tipo = 1 conteudo like '% ? %' ");
+
+			sql.setString(1, tag);
+			rs = sql.executeQuery();
+			
+			while(rs.next()){
+				c = c + rs.getString(1) + "\n";
+			}
+			
+			}
+		catch (Exception e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+
+		return c;
 		
 	}
 }

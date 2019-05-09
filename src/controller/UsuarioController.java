@@ -83,7 +83,7 @@ public int getPerfilUserPublico(String idUsuario){
 		int valor = 0;
 		
 		try {
-			PreparedStatement sql = con.prepareStatement("select COUNT(*) from usuario where TIPOPERFIL = 'PUBLICO' AND IDUSUARIO  = ?");
+			PreparedStatement sql = con.prepareStatement("select COUNT(*)qtd from usuario where TIPOPERFIL = 'PUBLICO' AND IDUSUARIO  = ?");
 			sql.setString(1, idUsuario);
 
 			rs = sql.executeQuery();
@@ -157,7 +157,7 @@ public int getPerfilUserPublico(String idUsuario){
 			rs = sql.executeQuery();
 
 			while(rs.next()){
-				s = rs.getString(1) + "\n";   
+				s = s+rs.getString(1) + "\n";   
 			}
 
 
@@ -208,34 +208,46 @@ public int getPerfilUserPublico(String idUsuario){
 	public void seguirUsuario(Usuario u, String idUsuarioSeguir){
 		Connection con = bd.conexao();
 		PreparedStatement sql = null; 
-		PreparedStatement sql2 = null; 
+		PreparedStatement sql2 = null;
+		PreparedStatement sql3 = null; 
 		try {
 			if (getPerfilUserPublico(idUsuarioSeguir)==1) {
 
-				sql = con.prepareStatement("INSERT INTO SEGUINDO (ID_USUARIO, ID_SEGUINDO) "
-						+ " select ?,? from dual " + 
-						" where not exists (select 1 from SEGUINDO r where  r.ID_USUARIO = ? and  r.ID_SEGUINDO= ?)");
+				sql = con.prepareStatement("INSERT INTO SEGUINDO (ID_USUARIO, ID_SEGUINDO) VALUES (?,?)");
 				
-				sql2 = con.prepareStatement("INSERT INTO SEGUIDOR (ID_USUARIO, ID_SEGUIDOR)"
-						+ " select ?,? from dual " + 
-						" where not exists (select 1 from SEGUIDOR r where  r.ID_USUARIO = ? and  r.ID_SEGUIDOR= ?)");
+				sql.setString(1, u.getIdUsuario());
+				sql.setString(2, idUsuarioSeguir);
+				sql.executeUpdate();
+				
+				sql2 = con.prepareStatement("INSERT INTO SEGUIDOR (ID_SEGUIDOR,ID_USUARIO)  VALUES (?,?)");
 
 				sql2.setString(1, idUsuarioSeguir);
 				sql2.setString(2, u.getIdUsuario());
+				sql2.executeUpdate();
+
+				sql3 = con.prepareStatement("INSERT INTO notificacao (ID_SEGUIDOR,CONTEUDO)  VALUES (?,?)");
+
+				sql3.setString(1, idUsuarioSeguir);
+				sql3.setString(2, "USUARIO: " + u.getNomeUsuario()+" está te seguindo");
+				
+				sql3.executeUpdate();
 				
 			}else {
 				sql = con.prepareStatement("INSERT INTO SOLICITACAO_SEGUIDOR (ID_USU_SOLICITA, ID_USU_SEGUIR ) VALUES (?,?)");
+				
+				sql.setString(1, u.getIdUsuario());
+				sql.setString(2, idUsuarioSeguir);
+
+				sql.executeUpdate();
 			}
 				
 
-			sql.setString(1, u.getIdUsuario());
-			sql.setString(2, idUsuarioSeguir);
-
-			sql.executeUpdate();
-			if(sql2 != null) {
-				sql2.executeUpdate();
-				
-			}
+//			sql.setString(1, u.getIdUsuario());
+//			sql.setString(2, idUsuarioSeguir);
+//
+//			sql.executeUpdate();
+//			sql2.executeUpdate();
+			
 			
 		} catch (Exception e) { 
 			System.out.println("Erro - "+e);
@@ -292,14 +304,14 @@ public int getPerfilUserPublico(String idUsuario){
 
 	}
 
-	public Usuario buscaUsuario(String nome) {
+	public Usuario buscaUsuario(String id) {
 		
 		Connection con = bd.conexao();
 		try {
 
-			PreparedStatement sql = con.prepareStatement("select * from usuario where nome = ?");
+			PreparedStatement sql = con.prepareStatement("select * from usuario where idusuario = ?");
 
-			sql.setString(1, nome);
+			sql.setString(1, id);
 			rs = sql.executeQuery();
 			u = SetarUser(rs);
 		}
@@ -326,7 +338,7 @@ public int getPerfilUserPublico(String idUsuario){
 			rs = sql.executeQuery();
 
 			while(rs.next()){
-				s = rs.getString(1) + "\n";   
+				s = s + rs.getString(1) + "\n";   
 			}
 
 
@@ -341,6 +353,37 @@ public int getPerfilUserPublico(String idUsuario){
 		}
 		
 		return s;
+	}
+
+	public String obterLinhaDoTempo(Usuario u) {
+
+		String  s = "";
+		Connection con = bd.conexao();
+		
+		try {
+			
+			PreparedStatement sql = con.prepareStatement("select conteudo from vw_linha_do_tempo where id_usuario = ?");
+			sql.setString(1, u.getIdUsuario());
+
+			rs = sql.executeQuery();
+
+			while(rs.next()){
+				s = s+rs.getString(1) + "\n";   
+			}
+
+
+		} catch (Exception e) { 
+			System.out.println("Erro - "+e);
+		}finally {
+			try {
+				//con.close();
+			} catch (Exception e2) {
+
+			}
+		}
+		
+		return s;
+
 	}
 
 }
