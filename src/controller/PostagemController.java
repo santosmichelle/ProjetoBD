@@ -11,6 +11,7 @@ import java.util.List;
 import conexao.ConexaoBD;
 import model.Comentario;
 import model.Postagem;
+import model.Usuario;
 
 public class PostagemController {
 
@@ -118,7 +119,7 @@ public class PostagemController {
 		Connection con = bd.conexao();
 		List<Comentario> c = null;
 		try {
-			PreparedStatement sql = con.prepareStatement("select * from postagem where id = ?");
+			PreparedStatement sql = con.prepareStatement("select * from COMENTARIO where IDPOST = ?");
 
 			sql.setString(1, idPost);
 			rs = sql.executeQuery();
@@ -153,24 +154,24 @@ public class PostagemController {
 		return cts;
 	}
 	
-	public void incluirComentario (Comentario c) {
+	public void incluirComentario (Usuario u, String idPost, String conteudo) {
 		
-//		PreparedStatement sql = con.prepareStatement("INSERT INTO POSTAGEM (TEXTO, IDUSUARIO,FOTO,DATA) "
-//				+ "VALUES (?,?,?,to_date(to_char(sysdate,'dd/mm/yyyy hh24:mi:ss'),'dd/mm/yyyy hh24:mi:ss'))");
-//
-//		sql.setString(1, post.getTexto());
-//		sql.setString(2, post.getIdUsuario());
-//		sql.setString(3, post.getFoto());
-
-
-
-		//sql.executeUpdate(); // usado para inserts, update e delete 
-
 		
 		Connection con = bd.conexao();
 
 		try {
+			PreparedStatement sql = con.prepareStatement("INSERT INTO comentario (conteudo, IDUSUARIO,idpost,DATA) "
+					+ "VALUES (?,?,?,to_date(to_char(sysdate,'dd/mm/yyyy hh24:mi:ss'),'dd/mm/yyyy hh24:mi:ss'))");
+	
+			sql.setString(1, conteudo);
+			sql.setString(2, u.getIdUsuario());
+			sql.setString(3, idPost);
 
+
+
+			sql.executeUpdate(); // usado para inserts, update e delete 
+
+			
 				}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -191,6 +192,39 @@ public class PostagemController {
 			// TODO: handle exception
 		}
 
+	}
+
+
+	public void deletePostComentario(String idPostComent, String opcao) {
+
+		Connection con = bd.conexao();
+		PreparedStatement sql = null; 
+		
+		try {
+		
+		if (opcao.equals("1")) {
+			sql = con.prepareStatement("delete from postagem where idpost = ? ");
+			sql = con.prepareStatement("delete from comentario where idpost = ? ");
+		} else {
+			sql = con.prepareStatement("delete from comentario where idpost = ? ");
+		}
+			
+			
+			sql.setString(1,idPostComent);
+			
+			sql.executeUpdate();
+
+
+		} catch (Exception e) { 
+			System.out.println("Erro - "+e);
+		}finally {
+			try {
+				//con.close();
+			} catch (Exception e2) {
+
+			}
+		}
+		
 	}
 }
 

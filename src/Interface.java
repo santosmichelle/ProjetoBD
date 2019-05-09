@@ -19,7 +19,7 @@ public class Interface {
 		Usuario rs;
 		Comentario coment= null;
 		MensagemPrivada m = null;
-		String dados = null;
+		String opcao = null;
 		String vlrTmp = null;
 		Integer opt = null;
 
@@ -46,6 +46,7 @@ public class Interface {
 								JOptionPane.showInputDialog("Digite a senha"));
 						
 								if (userlogado != null) {
+									System.out.println("Conectado!");
 									JOptionPane.showMessageDialog(null, "Logado");
 								}					
 				
@@ -83,17 +84,35 @@ public class Interface {
 			}
 
 			if(userlogado !=null) {
+				
+				menuInicial = false; //apos logado n chama o login
 
 				opt = Integer.parseInt(JOptionPane.showInputDialog("Digite um numero! \n"
-						+ "1  - Digite o nome do usuario para pesquisar \n"
-						+ "2  - Adicionar usuario para seguir \n"
-						+ "3  - Bloquear usuario \n"
-						+ "4  - Publicar no mural \n"
+						/*+ "1  - Digite o nome do usuario para pesquisar \n" //OK
+						+ "2  - Adicionar usuario para seguir \n" //OK
+						+ "3  - Bloquear usuario \n" //OK
+						+ "4  - Publicar no mural \n" //OK
 						+ "5  - Comentar Postagem \n"
 						+ "6  - Incluir uma marcação \n"
 						+ "7  - Listar Conversas \n"
 						+ "8  - Listar Uma Conversas \n"
 						+ "9  - Inserir uma msg privada \n"
+						+ "10  - Listar notificação \n" //OK, INCLUIR NOTIFICACAO DE MARCACAO OU CONVERSA
+						+ "11  - Aceitar solicitação \n" //OK
+						+ "12  - Listar Posts \n"
+						+ "13  - Listar um Post \n" */
+
+						+ "1  - Digite o nome do usuario para pesquisar \n" //OK
+				/*ok*/	+ "2  - Adicionar usuario para seguir \n" //OK
+				/*ok*/	+ "3  - Bloquear usuario \n" //OK
+				/*ok*/	+ "4  - Publicar no mural \n" //OK
+				/*ok*/	+ "5  - Listar Posts/comentario \n" //ok //ordenar decrescente, listar qlq pessoa
+				/*ok*/	+ "6  - Listar notificação \n" //OK, INCLUIR NOTIFICACAO DE MARCACAO OU CONVERSA, listar  por data, incluir opcao de buscar posts e comentarios com @ ou #, alem de pessoas q seguem
+				/*ok*/	+ "7  - Aceitar solicitação \n" //OK
+				/*ok*/	+ "8  - Inserir comentario \n" //OK
+				/*ok*/	+ "9  - Deleltar post/comentario \n" //OK
+				/*ok*/	+ "10 - Buscar Marcacao \n" 	
+//				/*ok*/	+ "10  - Listar um Post/comentario \n" 						
 						
 						+ "digite 999 p sair"));
 
@@ -165,89 +184,113 @@ public class Interface {
 						}				
 
 					break;
-//				case 5:
-//					coment= null;
-//						try {
-//							
-//							coment = new Comentario(JOptionPane.showInputDialog("Digite o id do post"),
-//									userlogado.getIdUsuario(), 
-//									JOptionPane.showInputDialog("Digite o comentario"));	
-//							
-//						pc.incluirComentario(coment); 
-//							
-//					
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//							bd.fechar();
-//							System.out.println("main fechar!");
-//							// TODO: handle exception
-//						}
+				case 5:
+					opcao = null;
+					
+					try {
 
-//					break;
+					opcao = JOptionPane.showInputDialog("Digite a opção para listar (1- Post,2- Coment)");
+					if (opcao.equals("1")) {
+						vlrTmp = uc.listarPostComentario(userlogado.getIdUsuario(),opcao);
+					}else if (opcao.equals("2")){
+						vlrTmp = uc.listarPostComentario(JOptionPane.showInputDialog("Digite o id do post"),opcao);
+					}
+				
+					
+					JOptionPane.showMessageDialog(null, vlrTmp);
+			
+				} catch (Exception e) {
+					e.printStackTrace();
+					bd.fechar();
+					System.out.println("main fechar!");
+					// TODO: handle exception
+				}	
+					
+					break;
 				case 6:
 				
-//n fez				
+				try {
+						
+						JOptionPane.showMessageDialog(null, uc.listarNotificacao(userlogado));
+		
+					} catch (Exception e) {
+						e.printStackTrace();
+						bd.fechar();
+						System.out.println("main fechar!");
+						// TODO: handle exception
+					}			
 					break;
 				case 7:
-					vlrTmp= null;
 					
 					try {
 						
-						for (MensagemPrivada s : mp.listarConversas(userlogado)) {
-							vlrTmp = "idConversa: "+ s.getIdMensagem() +"Nome: "+ s.getNomeUsuario() + "\n";
-							
-						} 
-						
-						JOptionPane.showMessageDialog(null, vlrTmp);
-				
+				uc.aceitarSolicSeguir(userlogado,JOptionPane.showInputDialog("Digite o id do usuario pra aceitar"));
+		
 					} catch (Exception e) {
 						e.printStackTrace();
 						bd.fechar();
 						System.out.println("main fechar!");
 						// TODO: handle exception
 					}
+					
 					
 					break;
 				case 8:
 
-					vlrTmp= null;
-					
 					try {
 						
-						for (MensagemPrivada s : mp.listarUmaConversa(JOptionPane.showInputDialog("Digite o id da conversa"))) {
-							vlrTmp = "Nome: "+ s.getNomeUsuario() + "Conteudo: "+ s.getConteudo() 
-							+ "Data: "+ s.getData() +"\n";
-							
-						} 
-						
-						JOptionPane.showMessageDialog(null, vlrTmp);
-				
-					} catch (Exception e) {
-						e.printStackTrace();
-						bd.fechar();
-						System.out.println("main fechar!");
-						// TODO: handle exception
-					}
+					pc.incluirComentario(userlogado,
+							JOptionPane.showInputDialog("Digite o id do post"),
+							JOptionPane.showInputDialog("Digite o conteudo")); 
+			
+				} catch (Exception e) {
+					e.printStackTrace();
+					bd.fechar();
+					System.out.println("main fechar!");
+					// TODO: handle exception
+				}	
 					
 					break;
 
 				case 9:
 
-					m= null;
+					opcao = null;
 					
-//					try {
-//						
-//						m = new MensagemPrivada(userlogado.getIdUsuario(),
-//								JOptionPane.showInputDialog("Digite o conteudo da conversa"));
-//						
-//						mp.incluirConversa(m);
-//				
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//						bd.fechar();
-//						System.out.println("main fechar!");
-//						// TODO: handle exception
-//					}
+					try {
+
+					opcao = JOptionPane.showInputDialog("Digite a opção para listar (1- Post,2- Coment)");
+					if (opcao.equals("1")) {
+						pc.deletePostComentario(JOptionPane.showInputDialog("Digite o id do post"),opcao);
+					}else if (opcao.equals("2")){
+						pc.deletePostComentario(JOptionPane.showInputDialog("Digite o id dos comentario"),opcao);
+					}
+				
+			
+				} catch (Exception e) {
+					e.printStackTrace();
+					bd.fechar();
+					System.out.println("main fechar!");
+					// TODO: handle exception
+				}	
+					
+					
+					break;					
+				case 10:
+					
+	
+					
+					break;					
+				case 11:
+
+
+					
+					break;					
+				case 12:
+
+					
+					break;
+				case 13:
+
 					
 					break;					
 				default:
